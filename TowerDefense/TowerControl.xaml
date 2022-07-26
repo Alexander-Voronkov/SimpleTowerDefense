@@ -4,13 +4,25 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TowerDefense"
-             mc:Ignorable="d" >
+             mc:Ignorable="d" MouseMove="UserControl_MouseMove" MouseEnter="UserControl_MouseEnter" MouseLeave="UserControl_MouseLeave" >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Image x:Name="Sprite" Grid.Row="0" Margin="0 0 0 20" Width="150" Height="150"/>
-        <ProgressBar x:Name="CurrentHp" Background="PaleVioletRed" Height="10" Grid.Row="1"/>
+        <Grid.Background>
+            <ImageBrush x:Name="earthbrush"/>
+        </Grid.Background>
+        <Image Grid.Row="0" x:Name="TowerImage"/>
+        <Label Background="Bisque" x:Name="TowerName" Grid.Row="1" FontFamily="Arial" FontSize="10" HorizontalAlignment="Center" Visibility="Hidden"/>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="RemoveButton" Click="RemoveButton_Click" Grid.Column="1" Margin="5" Content="Remove" Background="Orange" Visibility="Hidden"/>
+            <Button x:Name="UpgradeButton" Click="UpgradeButton_Click" Grid.Column="0" Margin="5" Content="Upgrade" Background="Orange" Visibility="Hidden"/>
+        </Grid>
     </Grid>
 </UserControl>

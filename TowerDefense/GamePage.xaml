@@ -6,21 +6,52 @@
       xmlns:local="clr-namespace:TowerDefense"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="GamePage" MouseDown="Page_MouseDown">
+      Title="GamePage">
     <Grid>
-        <MediaElement Source="Textures/Music/PlanningScreen.mp3"/>
-        <Canvas x:Name="GameMap">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="8*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="9*"/>
+        </Grid.RowDefinitions>
+
+
+        
+        <MediaElement MediaEnded="PlanningMusic_MediaEnded" Source="Textures/Music/PlanningScreen.mp3" Name="PlanningMusic" LoadedBehavior="Manual"/>
+        <MediaElement Source="Textures/Music/FightingScreen.mp3" Name="PlayMusic" LoadedBehavior="Manual"/>
+        <Canvas x:Name="GameMap" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
             <Canvas.Background>
                 <ImageBrush x:Name="Background" />
             </Canvas.Background>
-            <Path StrokeThickness="120">
+            <Path StrokeThickness="70" Name="Path1">
                 <Path.Data>
-                    <PathGeometry x:Name="Path" Figures="M 0,900 L 500,900 L 500,300 L 900,300 L 900,900 L 1300,900 L 1300,100 L 0,100"/>
+                    <PathGeometry x:Name="Path" Figures="M 0,900 L 500,900 L 500,500 L 900,500 L 900,900 L 1300,900 L 1300,200 L 400,200 L 400,0"/>
                 </Path.Data>
                 <Path.Stroke>
-                    <ImageBrush x:Name="StoneBrush" TileMode="Tile"/>
+                    <ImageBrush x:Name="StoneBrush"/>
                 </Path.Stroke>
             </Path>
         </Canvas>
+        <Grid Name="TowerGrid" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Background="Bisque">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+        </Grid>
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Image x:Name="goldImg" Grid.Column="1" HorizontalAlignment="Right" Margin="0 0 120 0" Width="100" Height="100"/>
+            <Label x:Name="goldCount"  Grid.Column="1" HorizontalAlignment="Right" Margin="0 0 200 0" FontFamily="Arial" FontSize="40" Foreground="Bisque" FontWeight="Bold"/>
+            <Image HorizontalAlignment="Left" Margin="60 0 60 0" x:Name="heartsImg1" Grid.Column="0" Width="50" Height="50"/>
+            <Image HorizontalAlignment="Left" Margin="120 0 120 0" x:Name="heartsImg2" Grid.Column="0" Width="50" Height="50"/>
+            <Image HorizontalAlignment="Left" Margin="180 0 180 0" x:Name="heartsImg3" Grid.Column="0" Width="50" Height="50"/>
+            <Button Height="80" x:Name="StartGameBtn" Click="StartGameBtn_Click" Template="{StaticResource btnTemplate}" HorizontalAlignment="Center" Width="150" Grid.Column="0" Grid.ColumnSpan="2" Content="Start"/>
+        </Grid>
     </Grid>
 </Page>
