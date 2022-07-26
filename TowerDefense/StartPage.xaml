@@ -1,0 +1,36 @@
+﻿<Page x:Class="TowerDefense.StartPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:TowerDefense"
+      mc:Ignorable="d"
+      Title="StartPage">
+    <Grid>
+        <Image Name="StartScreen"/>
+
+        <Grid x:Name="ButtonGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <MediaElement LoadedBehavior="Manual" Loaded="MediaElement_Loaded" MediaEnded="MediaElement_MediaEnded" Name="music" Source="Textures/Music/StartScreen.mp3" Volume="{Binding ElementName=MusicVolume, Path=Value}"/>
+            <MediaElement LoadedBehavior="Manual" Name="presssound" Source="Textures/Music/PressSound.mp3"/>
+            <Button Click="StartButton" x:Name="StartBtn" Template="{StaticResource btnTemplate}" Content="Start" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"/>
+            <Button Click="SettingsButton" x:Name="SettingsBtn" Template="{StaticResource btnTemplate}" Content="Settings" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"/>
+        </Grid>
+    </Grid>
+</Page>

@@ -1,0 +1,26 @@
+﻿<Page x:Class="TowerDefense.GamePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:TowerDefense"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="GamePage" MouseDown="Page_MouseDown">
+    <Grid>
+        <MediaElement Source="Textures/Music/PlanningScreen.mp3"/>
+        <Canvas x:Name="GameMap">
+            <Canvas.Background>
+                <ImageBrush x:Name="Background" />
+            </Canvas.Background>
+            <Path StrokeThickness="120">
+                <Path.Data>
+                    <PathGeometry x:Name="Path" Figures="M 0,900 L 500,900 L 500,300 L 900,300 L 900,900 L 1300,900 L 1300,100 L 0,100"/>
+                </Path.Data>
+                <Path.Stroke>
+                    <ImageBrush x:Name="StoneBrush" TileMode="Tile"/>
+                </Path.Stroke>
+            </Path>
+        </Canvas>
+    </Grid>
+</Page>
