@@ -59,7 +59,6 @@ namespace TowerDefense
         }
         private void Init()
         {
-            attacker.Health = attacker.Health * settings.Difficulty;
             CurrentHp.Value = attacker.Health;
             CurrentHp.Maximum = attacker.Health;
             CurrentHp.Minimum = 0;

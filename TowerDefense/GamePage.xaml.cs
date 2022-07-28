@@ -344,15 +344,15 @@ namespace TowerDefense
                 int q1=random.Next(0, 10);
                 if (q1 % 3 == 0)
                 {
-                    GameMap.Children.Add(new AttackerControl(new Zombie(), points, random, this,settings));
+                    GameMap.Children.Add(new AttackerControl(new Zombie(), points, random, this, settings) { Width=150,Height=150});
                 }
                 else if(q1 % 3==1)
                 {
-                    GameMap.Children.Add(new AttackerControl(new Skeleton(), points, random,this, settings));
+                    GameMap.Children.Add(new AttackerControl(new Skeleton(), points, random,this, settings) { Width = 150, Height = 150 });
                 }
                 else if (q1 % 3 == 2)
                 {
-                    GameMap.Children.Add(new AttackerControl(new Dragon(), points, random,this, settings));
+                    GameMap.Children.Add(new AttackerControl(new Dragon(), points, random,this, settings) { Width = 150, Height = 150 });
                 }
             }
             WaitMove();

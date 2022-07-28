@@ -38,49 +38,49 @@ namespace TowerDefense
             {
                 Image bullet = new Image() { Source = tower.ShootImage.Source, Width = 30, Height = 30 };
                 buttons.Children.Add(bullet);
-                Canvas.SetTop(bullet, Canvas.GetTop(this));
-                Canvas.SetLeft(bullet, Canvas.GetLeft(this));
+                Canvas.SetTop(bullet, Canvas.GetTop(this)+Height/2);
+                Canvas.SetLeft(bullet, Canvas.GetLeft(this)+Width/2);
                 while (true)
                 {
-                    if (Canvas.GetTop(bullet) == Canvas.GetTop(t) && Canvas.GetLeft(bullet) == Canvas.GetLeft(t))
+                    if (Canvas.GetTop(bullet) == Canvas.GetTop(t)+ Math.Round(t.Height / 3) && Canvas.GetLeft(bullet) == Canvas.GetLeft(t)+ Math.Round(t.Width / 3))
                     {
                         t.GetDamaged(this);
                         buttons.Children.Remove(bullet);
                         return;
                     }
-                    else if (Canvas.GetTop(t) < Canvas.GetTop(bullet) && Canvas.GetLeft(t) < Canvas.GetLeft(bullet) )
+                    else if (Canvas.GetTop(t) + Math.Round(t.Height/3) < Canvas.GetTop(bullet) && Canvas.GetLeft(t) + Math.Round(t.Width / 3) < Canvas.GetLeft(bullet) )
                     {
                         Canvas.SetTop(bullet, Canvas.GetTop(bullet) - 1);
                         Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) - 1);
                     }
-                    else if (Canvas.GetTop(t) > Canvas.GetTop(bullet)  && Canvas.GetLeft(t) > Canvas.GetLeft(bullet) )
+                    else if (Canvas.GetTop(t) + Math.Round(t.Height / 3) > Canvas.GetTop(bullet)  && Canvas.GetLeft(t) + Math.Round(t.Width / 3) > Canvas.GetLeft(bullet) )
                     {
                         Canvas.SetTop(bullet, Canvas.GetTop(bullet) + 1);
                         Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) + 1);
                     }
-                    else if (Canvas.GetTop(t) > Canvas.GetTop(bullet)  && Canvas.GetLeft(t) < Canvas.GetLeft(bullet))
+                    else if (Canvas.GetTop(t) + Math.Round(t.Height / 3) > Canvas.GetTop(bullet)  && Canvas.GetLeft(t) + Math.Round(t.Width / 3) < Canvas.GetLeft(bullet))
                     {
                         Canvas.SetTop(bullet, Canvas.GetTop(bullet) + 1);
                         Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) - 1);
                     }
-                    else if (Canvas.GetTop(t) < Canvas.GetTop(bullet)  && Canvas.GetLeft(t) > Canvas.GetLeft(bullet) )
+                    else if (Canvas.GetTop(t) + Math.Round(t.Height / 3) < Canvas.GetTop(bullet)  && Canvas.GetLeft(t) + Math.Round(t.Width / 3) > Canvas.GetLeft(bullet) )
                     {
                         Canvas.SetTop(bullet, Canvas.GetTop(bullet) - 1);
                         Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) + 1);
                     }
-                    else if (Canvas.GetTop(t) == Canvas.GetTop(bullet)  && Canvas.GetLeft(t) > Canvas.GetLeft(bullet))
+                    else if (Canvas.GetTop(t) + Math.Round(t.Height / 3) == Canvas.GetTop(bullet)  && Canvas.GetLeft(t) + Math.Round(t.Width / 3) > Canvas.GetLeft(bullet))
                     {
                         Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) + 1);
                     }
-                    else if (Canvas.GetTop(t) > Canvas.GetTop(bullet) && Canvas.GetLeft(t) == Canvas.GetLeft(bullet))
+                    else if (Canvas.GetTop(t) + Math.Round(t.Height / 3) > Canvas.GetTop(bullet) && Canvas.GetLeft(t) + Math.Round(t.Width / 3) == Canvas.GetLeft(bullet))
                     {
                         Canvas.SetTop(bullet, Canvas.GetTop(bullet) + 1);
                     }
-                    else if (Canvas.GetTop(t) < Canvas.GetTop(bullet) && Canvas.GetLeft(t) == Canvas.GetLeft(bullet))
+                    else if (Canvas.GetTop(t) + Math.Round(t.Height / 3) < Canvas.GetTop(bullet) && Canvas.GetLeft(t) + Math.Round(t.Width / 3) == Canvas.GetLeft(bullet))
                     {
                         Canvas.SetTop(bullet, Canvas.GetTop(bullet) - 1);
                     }
-                    else if (Canvas.GetTop(t) == Canvas.GetTop(bullet)  && Canvas.GetLeft(t) < Canvas.GetLeft(bullet))
+                    else if (Canvas.GetTop(t) + Math.Round(t.Height / 3) == Canvas.GetTop(bullet)  && Canvas.GetLeft(t) + Math.Round(t.Width / 3) < Canvas.GetLeft(bullet))
                     {
                         Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) - 1);
                     }
@@ -151,16 +151,18 @@ namespace TowerDefense
 
         private void UpgradeButton_Click(object sender, RoutedEventArgs e)
         {
-            if (tower.Level < 3)
+            if (tower.Level < 3&& Convert.ToDouble(moneyCount.Content) - GetCost() >= 0)
             {
-                this.tower.Level = (short)(tower.Level + 1);
-                if(tower.Level==3)
-                    UpgradeButton.IsEnabled = false;
+                this.tower.Level++;
+                tower.AttackDelay -= 300;
+                tower.Damage+=tower.Damage;
+                dispatcherTimer.Interval = TimeSpan.FromMilliseconds(tower.AttackDelay);
                 TowerImage.Source = tower.CurrentSprite.Source;
                 TowerName.Content = $"{tower.GetType().Name} Level {tower.Level}";
-                if (Convert.ToDouble(moneyCount.Content) - GetCost() > 0)
-                    moneyCount.Content = Convert.ToDouble(moneyCount.Content) - GetCost();
-                else return;
+                moneyCount.Content = Convert.ToDouble(moneyCount.Content) - GetCost();
+
+                if (tower.Level == 3 || Convert.ToDouble(moneyCount.Content)-GetCost() < 0)
+                    UpgradeButton.IsEnabled = false;
             }
         }
 

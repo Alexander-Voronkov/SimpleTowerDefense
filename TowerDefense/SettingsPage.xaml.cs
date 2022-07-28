@@ -41,14 +41,6 @@ namespace TowerDefense
             frame.GoBack();
         }
 
-        private void DiffSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (DiffSliderLabel != null)
-            {
-                settings.Difficulty = (int)DiffSlider.Value;
-            }
-        }
-
         private void DiffSlider_ValueChanged_1(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (VolumeSliderLabel != null)
