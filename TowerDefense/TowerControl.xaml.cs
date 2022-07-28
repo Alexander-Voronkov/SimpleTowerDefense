@@ -21,6 +21,7 @@ namespace TowerDefense
     /// </summary>
     public partial class TowerControl : UserControl
     {
+        public System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
         ITower tower;
         Canvas buttons;
         Label moneyCount;
@@ -29,6 +30,63 @@ namespace TowerDefense
         {
             this.MouseEnter -= UserControl_MouseEnter;
             this.MouseLeave -= UserControl_MouseLeave;
+        }
+        private async void Tick(object sender, EventArgs e)
+        {
+            AttackerControl t;
+            if ((t = CheckRadius()) != null)
+            {
+                Image bullet = new Image() { Source = tower.ShootImage.Source, Width = 30, Height = 30 };
+                buttons.Children.Add(bullet);
+                Canvas.SetTop(bullet, Canvas.GetTop(this));
+                Canvas.SetLeft(bullet, Canvas.GetLeft(this));
+                while (true)
+                {
+                    if (Canvas.GetTop(bullet) == Canvas.GetTop(t) && Canvas.GetLeft(bullet) == Canvas.GetLeft(t))
+                    {
+                        t.GetDamaged(this);
+                        buttons.Children.Remove(bullet);
+                        return;
+                    }
+                    else if (Canvas.GetTop(t) < Canvas.GetTop(bullet) && Canvas.GetLeft(t) < Canvas.GetLeft(bullet) )
+                    {
+                        Canvas.SetTop(bullet, Canvas.GetTop(bullet) - 1);
+                        Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) - 1);
+                    }
+                    else if (Canvas.GetTop(t) > Canvas.GetTop(bullet)  && Canvas.GetLeft(t) > Canvas.GetLeft(bullet) )
+                    {
+                        Canvas.SetTop(bullet, Canvas.GetTop(bullet) + 1);
+                        Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) + 1);
+                    }
+                    else if (Canvas.GetTop(t) > Canvas.GetTop(bullet)  && Canvas.GetLeft(t) < Canvas.GetLeft(bullet))
+                    {
+                        Canvas.SetTop(bullet, Canvas.GetTop(bullet) + 1);
+                        Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) - 1);
+                    }
+                    else if (Canvas.GetTop(t) < Canvas.GetTop(bullet)  && Canvas.GetLeft(t) > Canvas.GetLeft(bullet) )
+                    {
+                        Canvas.SetTop(bullet, Canvas.GetTop(bullet) - 1);
+                        Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) + 1);
+                    }
+                    else if (Canvas.GetTop(t) == Canvas.GetTop(bullet)  && Canvas.GetLeft(t) > Canvas.GetLeft(bullet))
+                    {
+                        Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) + 1);
+                    }
+                    else if (Canvas.GetTop(t) > Canvas.GetTop(bullet) && Canvas.GetLeft(t) == Canvas.GetLeft(bullet))
+                    {
+                        Canvas.SetTop(bullet, Canvas.GetTop(bullet) + 1);
+                    }
+                    else if (Canvas.GetTop(t) < Canvas.GetTop(bullet) && Canvas.GetLeft(t) == Canvas.GetLeft(bullet))
+                    {
+                        Canvas.SetTop(bullet, Canvas.GetTop(bullet) - 1);
+                    }
+                    else if (Canvas.GetTop(t) == Canvas.GetTop(bullet)  && Canvas.GetLeft(t) < Canvas.GetLeft(bullet))
+                    {
+                        Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) - 1);
+                    }
+                    await Task.Delay(TimeSpan.FromMilliseconds(0.5));
+                }
+            }
         }
         public void SwitchUpgrade()
         {
@@ -44,57 +102,6 @@ namespace TowerDefense
                 }
             }
             return null;
-        }
-        public async void StartObserve()
-        {
-            var p = new Point(Width/2,Height/2);
-            AttackerControl t;
-            while ((t=CheckRadius())!=null)
-            {      
-                Image bullet = new Image() { Source = tower.ShootImage.Source, Width = 30, Height = 30 };
-                buttons.Children.Add(bullet);
-                Canvas.SetTop(bullet, Canvas.GetTop(this));
-                Canvas.SetLeft(bullet, Canvas.GetLeft(this));
-                if (Canvas.GetTop(bullet) == Canvas.GetTop(t) && Canvas.GetLeft(bullet) == Canvas.GetLeft(t))
-                    t.GetDamaged(this);
-                else if (Canvas.GetTop(t) < Canvas.GetTop(this) + 75 && Canvas.GetLeft(t) < Canvas.GetLeft(this) + 75)
-                {
-                    Canvas.SetTop(bullet, Canvas.GetTop(bullet) - 1);
-                    Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) - 1);
-                }
-                else if (Canvas.GetTop(t) > Canvas.GetTop(this) + 75 && Canvas.GetLeft(t) > Canvas.GetLeft(this) + 75)
-                {
-                    Canvas.SetTop(bullet, Canvas.GetTop(bullet) + 1);
-                    Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) + 1);
-                }
-                else if (Canvas.GetTop(t) > Canvas.GetTop(this) + 75 && Canvas.GetLeft(t) < Canvas.GetLeft(this) + 75)
-                {
-                    Canvas.SetTop(bullet, Canvas.GetTop(bullet) + 1);
-                    Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) - 1);
-                }
-                else if (Canvas.GetTop(t) < Canvas.GetTop(this) + 75 && Canvas.GetLeft(t) > Canvas.GetLeft(this) + 75)
-                {
-                    Canvas.SetTop(bullet, Canvas.GetTop(bullet) - 1);
-                    Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) + 1);
-                }
-                else if (Canvas.GetTop(t) == Canvas.GetTop(this) + 75 && Canvas.GetLeft(t) > Canvas.GetLeft(this) + 75)
-                {
-                    Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) + 1);
-                }
-                else if (Canvas.GetTop(t) > Canvas.GetTop(this) + 75 && Canvas.GetLeft(t) == Canvas.GetLeft(this) + 75)
-                {
-                    Canvas.SetTop(bullet, Canvas.GetTop(bullet) + 1);
-                }
-                else if (Canvas.GetTop(t) < Canvas.GetTop(this) + 75 && Canvas.GetLeft(t) == Canvas.GetLeft(this) + 75)
-                {
-                    Canvas.SetTop(bullet, Canvas.GetTop(bullet) - 1);
-                }
-                else if (Canvas.GetTop(t) == Canvas.GetTop(this) + 75 && Canvas.GetLeft(t) < Canvas.GetLeft(this) + 75)
-                {
-                    Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) - 1);
-                }
-                await Task.Delay(TimeSpan.FromMilliseconds(tower.AttackDelay));
-            }
         }
         public double GetCost()
         {
@@ -113,6 +120,8 @@ namespace TowerDefense
             TowerImage.Source = tower.CurrentSprite.Source;
             TowerName.Content = $"{tower.GetType().Name} Level {tower.Level}";
             earthbrush.ImageSource = new ImageSourceConverter().ConvertFromString("Textures/earth.png") as ImageSource;
+            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(tower.AttackDelay);
+            dispatcherTimer.Tick += Tick;
         }
         public object Clone()
         {

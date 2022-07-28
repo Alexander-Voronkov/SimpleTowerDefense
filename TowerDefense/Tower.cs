@@ -24,7 +24,7 @@ namespace TowerDefense
     {
         private Image _ShootImage = new Image() { Source = new ImageSourceConverter().ConvertFromString("Textures/Animations/Fireball.png") as ImageSource };
         public Image ShootImage { get { return _ShootImage; } set { ShootImage = value; } }
-        private double _Radius = 125;
+        private double _Radius = 300;
         public double Radius { get { return _Radius; }set { _Radius = value; } }
         private double _Damage = 70;
         public double Damage { get { return _Damage; }  set { _Damage = value; } }
@@ -34,7 +34,7 @@ namespace TowerDefense
         private double _Cost=50;
         public double Cost { get { return _Cost; } set { _Cost = value; } }
 
-        private double _AttackDelay = 10;
+        private double _AttackDelay = 3000;
         public double AttackDelay { get { return _AttackDelay; } set { _AttackDelay = value;} }
         private short _Level = 1;
         public short Level 
@@ -55,7 +55,7 @@ namespace TowerDefense
     {
         private Image _ShootImage = new Image() { Source = new ImageSourceConverter().ConvertFromString("Textures/Animations/Arrow.png") as ImageSource };
         public Image ShootImage { get { return _ShootImage; } set { ShootImage = value; } }
-        private double _Radius = 150;
+        private double _Radius =350;
         public double Radius { get { return _Radius; } set { _Radius = value; } }
         private double _Cost = 25;
         public double Cost { get { return _Cost; } set { _Cost = value; } }
@@ -64,7 +64,7 @@ namespace TowerDefense
         private Image _CurrentSprite = new Image() { Source = new ImageSourceConverter().ConvertFromString($"Textures/Towers/ArcherTower/ArcherTower1.png") as ImageSource };
         public Image CurrentSprite { get { return _CurrentSprite; } set { _CurrentSprite = value; } }
 
-        private double _AttackDelay = 5;
+        private double _AttackDelay = 1500;
         public double AttackDelay { get { return _AttackDelay; } set { _AttackDelay = value; } }
         private short _Level = 1;
         public short Level
@@ -85,7 +85,7 @@ namespace TowerDefense
     {
         private Image _ShootImage = new Image() { Source = new ImageSourceConverter().ConvertFromString("Textures/Animations/Cannonball.png") as ImageSource };
         public Image ShootImage { get { return _ShootImage; } set { ShootImage = value; } }
-        private double _Radius = 200;
+        private double _Radius = 375;
         public double Radius { get { return _Radius; } set { _Radius = value; } }
         private double _Cost = 35;
         public double Cost { get { return _Cost; } set { _Cost = value; } }
@@ -94,7 +94,7 @@ namespace TowerDefense
         private Image _CurrentSprite = new Image() { Source = new ImageSourceConverter().ConvertFromString($"Textures/Towers/Cannon/Cannon1.png") as ImageSource };
         public Image CurrentSprite { get { return _CurrentSprite; } set { _CurrentSprite = value; } }
 
-        private double _AttackDelay = 7;
+        private double _AttackDelay = 2000;
         public double AttackDelay { get { return _AttackDelay; } set { _AttackDelay = value; } }
         private short _Level = 1;
         public short Level

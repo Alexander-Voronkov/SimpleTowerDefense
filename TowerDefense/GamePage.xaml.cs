@@ -268,7 +268,7 @@ namespace TowerDefense
             Canvas.SetLeft(newcontrol, Canvas.GetLeft(sender as Button));
             Canvas.SetTop(newcontrol, Canvas.GetTop(sender as Button));
             goldCount.Content = Convert.ToDouble(goldCount.Content)-newcontrol.GetCost();
-            newcontrol.StartObserve();
+            newcontrol.dispatcherTimer.Start();
         }
 
         private void PlanningMusic_MediaEnded(object sender, RoutedEventArgs e)
@@ -288,14 +288,6 @@ namespace TowerDefense
             StartGameBtn.Click -= StartGameBtn_Click;
             StartGameBtn.Click += EndGameBtn_Click; 
             RandomCharGenerator();
-
-            for (int i = 0; i < GameMap.Children.Count; i++)
-            {
-                if (GameMap.Children[i] is TowerControl)
-                {
-                    (GameMap.Children[i] as TowerControl).StartObserve();
-                }
-            }
         }
         private void EndGameBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -317,12 +309,14 @@ namespace TowerDefense
                 {
                     if ((GameMap.Children[i] as TowerControl).Parent is Grid)
                     {
+                        (GameMap.Children[i] as TowerControl).dispatcherTimer.Stop();
                         ((GameMap.Children[i] as TowerControl).Parent as Grid).Children.Remove((GameMap.Children[i--] as TowerControl));
                     }
                     else if ((GameMap.Children[i] as TowerControl).Parent is Canvas)
                     {
                         Point p = new Point(Canvas.GetLeft((GameMap.Children[i] as TowerControl)), Canvas.GetTop((GameMap.Children[i] as TowerControl)));
-                        ((GameMap.Children[i] as TowerControl).Parent as Canvas).Children.Remove((GameMap.Children[i--] as TowerControl));
+                       (GameMap.Children[i] as TowerControl).dispatcherTimer.Stop();
+                       ((GameMap.Children[i] as TowerControl).Parent as Canvas).Children.Remove((GameMap.Children[i--] as TowerControl));
                         foreach (var item1 in GameMap.Children)
                         {
                             if (item1 is Button && p == new Point(Canvas.GetLeft(item1 as Button), Canvas.GetTop(item1 as Button)))
@@ -333,6 +327,13 @@ namespace TowerDefense
                         }
                     }
                 }
+                if
+                    (GameMap.Children[i] is Image&& (((GameMap.Children[i] as Image).Source.ToString()=="Textures/Animations/Arrow.png"||
+                    ((GameMap.Children[i] as Image).Source.ToString() =="Textures/Animations/Cannonball.png"||
+                    (GameMap.Children[i] as Image).Source.ToString() == "Textures/Animations/Arrow.png" ))))
+                    {
+                        ((GameMap.Children[i] as Image).Parent as Canvas).Children.Remove((GameMap.Children[i] as Image));
+                    }
             }
         }
         private void RandomCharGenerator()
@@ -343,15 +344,15 @@ namespace TowerDefense
                 int q1=random.Next(0, 10);
                 if (q1 % 3 == 0)
                 {
-                    GameMap.Children.Add(new AttackerControl(new Zombie(),points,random,this));
+                    GameMap.Children.Add(new AttackerControl(new Zombie(), points, random, this,settings));
                 }
                 else if(q1 % 3==1)
                 {
-                    GameMap.Children.Add(new AttackerControl(new Skeleton(), points, random,this));
+                    GameMap.Children.Add(new AttackerControl(new Skeleton(), points, random,this, settings));
                 }
                 else if (q1 % 3 == 2)
                 {
-                    GameMap.Children.Add(new AttackerControl(new Dragon(), points, random,this));
+                    GameMap.Children.Add(new AttackerControl(new Dragon(), points, random,this, settings));
                 }
             }
             WaitMove();

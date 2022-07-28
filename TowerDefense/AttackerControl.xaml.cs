@@ -28,11 +28,13 @@ namespace TowerDefense
         private List<Point> Path;
         private Image prev;
         GamePage page;
+        Settings settings;
         public void GetDamaged(TowerControl t)
         {
             if (attacker.Health - t.Damage <= 0)
-            { 
-                (this.Parent as Canvas).Children.Remove(this);
+            {
+                if((this.Parent as Canvas)!=null)
+                    (this.Parent as Canvas).Children.Remove(this);
                 page.goldCount.Content = (Convert.ToDouble(page.goldCount.Content) + attacker.Health / 4).ToString();
             }
             else
@@ -41,7 +43,7 @@ namespace TowerDefense
                 CurrentHp.Value -= t.Damage;
             }
         }
-        public AttackerControl(IAttacker a, List<Point> path,Random r,GamePage p)
+        public AttackerControl(IAttacker a, List<Point> path,Random r,GamePage p,Settings s)
         {
             InitializeComponent();
             Canvas.SetTop(this, path[0].Y);
@@ -49,6 +51,7 @@ namespace TowerDefense
             attacker = a;
             Path = path;
             random = r;
+            settings = s;
             CurrentTarget = Path[1];
             Init();
             ChangeImage();
@@ -56,6 +59,7 @@ namespace TowerDefense
         }
         private void Init()
         {
+            attacker.Health = attacker.Health * settings.Difficulty;
             CurrentHp.Value = attacker.Health;
             CurrentHp.Maximum = attacker.Health;
             CurrentHp.Minimum = 0;
@@ -87,13 +91,13 @@ namespace TowerDefense
                 while (true)
                 {
                 if (Canvas.GetTop(this) < CurrentTarget.Y && Canvas.GetLeft(this) == CurrentTarget.X)
-                { Canvas.SetTop(this, Canvas.GetTop(this) + 1); }
+                { Canvas.SetTop(this, Canvas.GetTop(this) + 0.5); }
                 else if (Canvas.GetTop(this) > CurrentTarget.Y && Canvas.GetLeft(this) == CurrentTarget.X)
-                { Canvas.SetTop(this, Canvas.GetTop(this) - 1); }
+                { Canvas.SetTop(this, Canvas.GetTop(this) - 0.5); }
                 else if (Canvas.GetTop(this) == CurrentTarget.Y && Canvas.GetLeft(this) > CurrentTarget.X)
-                { Canvas.SetLeft(this, Canvas.GetLeft(this) - 1);  }
+                { Canvas.SetLeft(this, Canvas.GetLeft(this) - 0.5);  }
                 else if (Canvas.GetTop(this) == CurrentTarget.Y && Canvas.GetLeft(this) < CurrentTarget.X)
-                { Canvas.SetLeft(this, Canvas.GetLeft(this) + 1);  }
+                { Canvas.SetLeft(this, Canvas.GetLeft(this) + 0.5);  }
                 else if (Canvas.GetTop(this) == CurrentTarget.Y && Canvas.GetLeft(this) == CurrentTarget.X)
                 {
                     if (Path.IndexOf(CurrentTarget) + 1 != Path.Count)
