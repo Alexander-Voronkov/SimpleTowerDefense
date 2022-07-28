@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Media.Animation;
 
 namespace TowerDefense
 {
@@ -22,20 +23,93 @@ namespace TowerDefense
     {
         ITower tower;
         Canvas buttons;
+        Label moneyCount;
+        public double Damage { get { return tower.Damage; } }
         public void TurnModifiersOff()
         {
             this.MouseEnter -= UserControl_MouseEnter;
             this.MouseLeave -= UserControl_MouseLeave;
         }
+        public void SwitchUpgrade()
+        {
+            UpgradeButton.IsEnabled=!UpgradeButton.IsEnabled;
+        }
+        private AttackerControl CheckRadius()
+        {
+            for (int i = 0; i < buttons.Children.Count; i++)
+            {
+                if (buttons.Children[i] is AttackerControl&& (Math.Pow(Canvas.GetTop(buttons.Children[i] as AttackerControl) - Canvas.GetTop(this) + 75, 2) + Math.Pow(Canvas.GetLeft(buttons.Children[i] as AttackerControl) - Canvas.GetLeft(this) + 75, 2)) <= Math.Pow(tower.Radius, 2))
+                {
+                    return (AttackerControl)buttons.Children[i];
+                }
+            }
+            return null;
+        }
+        public async void StartObserve()
+        {
+            var p = new Point(Width/2,Height/2);
+            AttackerControl t;
+            while ((t=CheckRadius())!=null)
+            {      
+                Image bullet = new Image() { Source = tower.ShootImage.Source, Width = 30, Height = 30 };
+                buttons.Children.Add(bullet);
+                Canvas.SetTop(bullet, Canvas.GetTop(this));
+                Canvas.SetLeft(bullet, Canvas.GetLeft(this));
+                if (Canvas.GetTop(bullet) == Canvas.GetTop(t) && Canvas.GetLeft(bullet) == Canvas.GetLeft(t))
+                    t.GetDamaged(this);
+                else if (Canvas.GetTop(t) < Canvas.GetTop(this) + 75 && Canvas.GetLeft(t) < Canvas.GetLeft(this) + 75)
+                {
+                    Canvas.SetTop(bullet, Canvas.GetTop(bullet) - 1);
+                    Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) - 1);
+                }
+                else if (Canvas.GetTop(t) > Canvas.GetTop(this) + 75 && Canvas.GetLeft(t) > Canvas.GetLeft(this) + 75)
+                {
+                    Canvas.SetTop(bullet, Canvas.GetTop(bullet) + 1);
+                    Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) + 1);
+                }
+                else if (Canvas.GetTop(t) > Canvas.GetTop(this) + 75 && Canvas.GetLeft(t) < Canvas.GetLeft(this) + 75)
+                {
+                    Canvas.SetTop(bullet, Canvas.GetTop(bullet) + 1);
+                    Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) - 1);
+                }
+                else if (Canvas.GetTop(t) < Canvas.GetTop(this) + 75 && Canvas.GetLeft(t) > Canvas.GetLeft(this) + 75)
+                {
+                    Canvas.SetTop(bullet, Canvas.GetTop(bullet) - 1);
+                    Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) + 1);
+                }
+                else if (Canvas.GetTop(t) == Canvas.GetTop(this) + 75 && Canvas.GetLeft(t) > Canvas.GetLeft(this) + 75)
+                {
+                    Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) + 1);
+                }
+                else if (Canvas.GetTop(t) > Canvas.GetTop(this) + 75 && Canvas.GetLeft(t) == Canvas.GetLeft(this) + 75)
+                {
+                    Canvas.SetTop(bullet, Canvas.GetTop(bullet) + 1);
+                }
+                else if (Canvas.GetTop(t) < Canvas.GetTop(this) + 75 && Canvas.GetLeft(t) == Canvas.GetLeft(this) + 75)
+                {
+                    Canvas.SetTop(bullet, Canvas.GetTop(bullet) - 1);
+                }
+                else if (Canvas.GetTop(t) == Canvas.GetTop(this) + 75 && Canvas.GetLeft(t) < Canvas.GetLeft(this) + 75)
+                {
+                    Canvas.SetLeft(bullet, Canvas.GetLeft(bullet) - 1);
+                }
+                await Task.Delay(TimeSpan.FromMilliseconds(tower.AttackDelay));
+            }
+        }
+        public double GetCost()
+        {
+            return tower.Cost;
+        }
         public void MakeUndroppable()
         {
             this.MouseMove-= UserControl_MouseMove;
         }
-        public TowerControl(ITower temp, Canvas b)
+        public TowerControl(ITower temp, Canvas b,Label goldCount)
         {
             InitializeComponent();
             tower = temp;
             buttons = b;
+            moneyCount = goldCount;
             TowerImage.Source = tower.CurrentSprite.Source;
             TowerName.Content = $"{tower.GetType().Name} Level {tower.Level}";
             earthbrush.ImageSource = new ImageSourceConverter().ConvertFromString("Textures/earth.png") as ImageSource;
@@ -71,12 +145,13 @@ namespace TowerDefense
             if (tower.Level < 3)
             {
                 this.tower.Level = (short)(tower.Level + 1);
+                if(tower.Level==3)
+                    UpgradeButton.IsEnabled = false;
                 TowerImage.Source = tower.CurrentSprite.Source;
                 TowerName.Content = $"{tower.GetType().Name} Level {tower.Level}";
-            }
-            else
-            {
-                UpgradeButton.IsEnabled = false;
+                if (Convert.ToDouble(moneyCount.Content) - GetCost() > 0)
+                    moneyCount.Content = Convert.ToDouble(moneyCount.Content) - GetCost();
+                else return;
             }
         }
 
@@ -84,17 +159,20 @@ namespace TowerDefense
         {
             if(e.LeftButton == MouseButtonState.Pressed)
             {
+                if (tower.Cost > Convert.ToDouble(moneyCount.Content))
+                    return;
                 foreach (var item in buttons.Children)
                 {
                     if (item is Button)
                         ((Button)item).Visibility = Visibility.Visible;
-                }                
+                }
                 if(tower is InfernalTower)
-                    DragDrop.DoDragDrop(this, new TowerControl(new InfernalTower(), buttons) { Width = 150, Height = 150 }, DragDropEffects.Copy);
+                    DragDrop.DoDragDrop(this, new TowerControl(new InfernalTower(), buttons,moneyCount) { Width = 150, Height = 150 }, DragDropEffects.Copy);
                 else if(tower is ArcherTower)
-                    DragDrop.DoDragDrop(this, new TowerControl(new ArcherTower(), buttons) { Width = 150, Height = 150 }, DragDropEffects.Copy);
+                    DragDrop.DoDragDrop(this, new TowerControl(new ArcherTower(), buttons,moneyCount) { Width = 150, Height = 150 }, DragDropEffects.Copy);
                 else if (tower is CannonTower)
-                    DragDrop.DoDragDrop(this, new TowerControl(new CannonTower(), buttons) { Width=150,Height=150}, DragDropEffects.Copy);
+                    DragDrop.DoDragDrop(this, new TowerControl(new CannonTower(), buttons,moneyCount) { Width=150,Height=150}, DragDropEffects.Copy);
+
             }
         }
 
@@ -103,13 +181,17 @@ namespace TowerDefense
             UpgradeButton.Visibility = Visibility.Visible;
             RemoveButton.Visibility = Visibility.Visible;
             TowerName.Visibility = Visibility.Visible;
+            if (Convert.ToDouble(moneyCount.Content) < tower.Cost)
+                UpgradeButton.IsEnabled= false;
+            else
+                UpgradeButton.IsEnabled = true;
         }
 
         private void UserControl_MouseLeave(object sender, MouseEventArgs e)
         {
             UpgradeButton.Visibility = Visibility.Hidden;
             RemoveButton.Visibility = Visibility.Hidden;
-            TowerName.Visibility = Visibility.Hidden;
+            TowerName.Visibility = Visibility.Hidden;            
         }
     }
 }

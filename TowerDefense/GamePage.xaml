@@ -7,7 +7,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="GamePage">
-    <Grid>
+    <Grid Name="maingrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="8*"/>
             <ColumnDefinition Width="2*"/>
@@ -16,11 +16,11 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="9*"/>
         </Grid.RowDefinitions>
-
-
-        
         <MediaElement MediaEnded="PlanningMusic_MediaEnded" Source="Textures/Music/PlanningScreen.mp3" Name="PlanningMusic" LoadedBehavior="Manual"/>
-        <MediaElement Source="Textures/Music/FightingScreen.mp3" Name="PlayMusic" LoadedBehavior="Manual"/>
+        <MediaElement MediaEnded="PlanningMusic_MediaEnded" Source="Textures/Music/BattleWin.mp3" Name="WinMusic" LoadedBehavior="Manual"/>
+        <MediaElement MediaEnded="PlanningMusic_MediaEnded" Source="Textures/Music/BattleLost.mp3" Name="LoseMusic" LoadedBehavior="Manual"/>
+        <MediaElement Source="Textures/Music/FightingScreen.mp3" Name="PlayMusic" LoadedBehavior="Manual" MediaEnded="PlanningMusic_MediaEnded"/>
+        <MediaElement Source="Textures/Music/PressSound.mp3" Name="presssound" LoadedBehavior="Manual"/>
         <Canvas x:Name="GameMap" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
             <Canvas.Background>
                 <ImageBrush x:Name="Background" />
@@ -40,18 +40,28 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            <Label FontSize="30" FontWeight="Bold" Name="InfernalTowerCost" Grid.Row="0" VerticalAlignment="Bottom" Foreground="OrangeRed"/>
+            <Image Name="gold1" Grid.Row="0" Width="100" Height="100" VerticalAlignment="Bottom" Margin="40 0 0 0" HorizontalAlignment="Left"/>
+            <Image Name="gold2" Grid.Row="1" Width="100" Height="100" VerticalAlignment="Bottom" Margin="40 0 0 0" HorizontalAlignment="Left"/>
+            <Image Name="gold3" Grid.Row="2" Width="100" Height="100" VerticalAlignment="Bottom" Margin="40 0 0 0" HorizontalAlignment="Left"/>
+            <Label FontSize="30" FontWeight="Bold" Name="CannonTowerCost" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" Foreground="OrangeRed"/>
+            <Label FontSize="30" FontWeight="Bold" Name="ArcherTowerCost" Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Foreground="OrangeRed"/>
+            
         </Grid>
         <Grid Grid.Row="0" Grid.Column="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+
+            <Button Click="Button_Click" Template="{StaticResource btnTemplate}" Content="Back" Grid.Column="0" Width="100" FontSize="15" Height="70" HorizontalAlignment="Left"/>
             <Image x:Name="goldImg" Grid.Column="1" HorizontalAlignment="Right" Margin="0 0 120 0" Width="100" Height="100"/>
             <Label x:Name="goldCount"  Grid.Column="1" HorizontalAlignment="Right" Margin="0 0 200 0" FontFamily="Arial" FontSize="40" Foreground="Bisque" FontWeight="Bold"/>
-            <Image HorizontalAlignment="Left" Margin="60 0 60 0" x:Name="heartsImg1" Grid.Column="0" Width="50" Height="50"/>
-            <Image HorizontalAlignment="Left" Margin="120 0 120 0" x:Name="heartsImg2" Grid.Column="0" Width="50" Height="50"/>
-            <Image HorizontalAlignment="Left" Margin="180 0 180 0" x:Name="heartsImg3" Grid.Column="0" Width="50" Height="50"/>
+            <Image HorizontalAlignment="Left" Margin="110 0 60 0" x:Name="heartsImg1" Grid.Column="0" Width="50" Height="50"/>
+            <Image HorizontalAlignment="Left" Margin="170 0 120 0" x:Name="heartsImg2" Grid.Column="0" Width="50" Height="50"/>
+            <Image HorizontalAlignment="Left" Margin="230 0 180 0" x:Name="heartsImg3" Grid.Column="0" Width="50" Height="50"/>
             <Button Height="80" x:Name="StartGameBtn" Click="StartGameBtn_Click" Template="{StaticResource btnTemplate}" HorizontalAlignment="Center" Width="150" Grid.Column="0" Grid.ColumnSpan="2" Content="Start"/>
+            <Label Height="50" Opacity="0.6" FontSize="30" FontWeight="Bold" Background="Wheat" Name="TimeLabel" HorizontalAlignment="Left" Foreground="OrangeRed" Grid.Column="0" Grid.ColumnSpan="2" Margin="500 20 100 0"/>
         </Grid>
     </Grid>
 </Page>

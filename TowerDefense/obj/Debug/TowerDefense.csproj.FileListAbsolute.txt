@@ -1,6 +1,3 @@
-C:\Users\voron\source\repos\TowerDefense\TowerDefense\bin\Debug\TowerDefense.exe.config
-C:\Users\voron\source\repos\TowerDefense\TowerDefense\bin\Debug\TowerDefense.exe
-C:\Users\voron\source\repos\TowerDefense\TowerDefense\bin\Debug\TowerDefense.pdb
 C:\Users\voron\source\repos\TowerDefense\TowerDefense\obj\Debug\TowerDefense.csproj.AssemblyReference.cache
 C:\Users\voron\source\repos\TowerDefense\TowerDefense\obj\Debug\TowerDefense.csproj.SuggestedBindingRedirects.cache
 C:\Users\voron\source\repos\TowerDefense\TowerDefense\obj\Debug\MainWindow.g.cs
@@ -23,3 +20,8 @@ C:\Users\voron\source\repos\TowerDefense\TowerDefense\obj\Debug\GamePage.g.cs
 C:\Users\voron\source\repos\TowerDefense\TowerDefense\obj\Debug\GamePage.baml
 C:\Users\voron\source\repos\TowerDefense\TowerDefense\obj\Debug\TowerControl.g.cs
 C:\Users\voron\source\repos\TowerDefense\TowerDefense\obj\Debug\TowerControl.baml
+C:\Users\voron\source\repos\TowerDefense\TowerDefense\obj\Debug\AttackerControl.g.cs
+C:\Users\voron\source\repos\TowerDefense\TowerDefense\obj\Debug\AttackerControl.baml
+C:\Users\voron\source\repos\TowerDefense\TowerDefense\TowerDefense.exe.config
+C:\Users\voron\source\repos\TowerDefense\TowerDefense\TowerDefense.exe
+C:\Users\voron\source\repos\TowerDefense\TowerDefense\TowerDefense.pdb

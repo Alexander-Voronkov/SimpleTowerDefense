@@ -23,13 +23,16 @@ namespace TowerDefense
         Frame frame;
         GamePage gamePage;
         SettingsPage settingsPage;
+        Settings s=new Settings();
         public StartPage(Frame f)
         {
             InitializeComponent();
             Init();
             frame = f;
-            gamePage = new GamePage(frame);
-            settingsPage = new SettingsPage(frame);
+            s.Volume = 1;
+            gamePage = new GamePage(frame,s);
+            settingsPage = new SettingsPage(frame,s);
+
         }
         private void Init()
         {
@@ -43,6 +46,7 @@ namespace TowerDefense
             await Task.Delay(300);
             presssound.Stop();
             frame.Navigate(settingsPage);
+            music.Volume = s.Volume;
         }
         private async void StartButton(object sender, RoutedEventArgs e)
         {
@@ -52,6 +56,10 @@ namespace TowerDefense
             presssound.Stop();
             music.Stop();
             frame.Navigate(gamePage);
+            gamePage.LoseMusic.Volume = s.Volume;
+            gamePage.WinMusic.Volume = s.Volume;
+            gamePage.PlanningMusic.Volume = s.Volume;
+            gamePage.PlayMusic.Volume = s.Volume;
         }
 
         private void MediaElement_MediaEnded(object sender, RoutedEventArgs e)

@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:TowerDefense"
              mc:Ignorable="d" MouseMove="UserControl_MouseMove" MouseEnter="UserControl_MouseEnter" MouseLeave="UserControl_MouseLeave" >
     <Grid>
+            
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"/>
             <RowDefinition Height="*"/>

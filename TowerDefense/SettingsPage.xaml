@@ -25,8 +25,12 @@
             <Button Click="BackBtn_Click" x:Name="BackBtn" Content="Back" Template="{StaticResource btnTemplate}" HorizontalAlignment="Left" Width="150" Height="70"/>
             <Label Margin="200 0 200 0" Content="Settings" Template="{StaticResource labelTemplate}" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Grid.Row="0"/>
             <Label Margin="50 0 50 0" Content="Difficulty" Template="{StaticResource labelTemplate}" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center"/>
-            <Label Grid.Column="1" Grid.Row="1" Content="{Binding ElementName=DiffSlider, Path=Value}" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="Wheat"/>
-            <Slider Minimum="1" Maximum="4" Name="DiffSlider" Grid.Row="1" Grid.Column="1" IsSnapToTickEnabled="True" VerticalAlignment="Center" Margin="30"/>
+            <Label Margin="50 0 50 0" Content="Volume" Template="{StaticResource labelTemplate}" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center"/>
+            
+            <Slider Value="1" Minimum="1" ValueChanged="DiffSlider_ValueChanged" Maximum="4" Name="DiffSlider" Grid.Row="1" Grid.Column="1" IsSnapToTickEnabled="True" VerticalAlignment="Center" Margin="30"/>
+            <Slider Value="0" Minimum="0" ValueChanged="DiffSlider_ValueChanged_1" Maximum="10" IsSnapToTickEnabled="True" Name="Volume" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="30"/>
+            <Label Name="DiffSliderLabel" Grid.Column="1" Grid.Row="1" Content="{Binding ElementName=DiffSlider, Path=Value,Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="Wheat"/>
+            <Label Name="VolumeSliderLabel" Grid.Column="1" Grid.Row="2" Content="{Binding ElementName=Volume, Path=Value,Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="Wheat"/>
         </Grid>
     </Grid>
 </Page>

@@ -28,9 +28,9 @@ namespace TowerDefense
     {
         private string _Name;
         public string Name { get => _Name; set => _Name = value; }
-        private double _Health;
+        private double _Health=200;
         public double Health { get => _Health; set => _Health=value; }
-        private double _Speed=5;
+        private double _Speed=7;
         public double Speed { get => _Speed; set => _Speed = value; }
         private List<Image> _Sprites = new List<Image>();
         public List<Image> Sprites { get => _Sprites; }
@@ -58,9 +58,9 @@ namespace TowerDefense
     {
         private string _Name;
         public string Name { get => _Name; set => _Name = value; }
-        private double _Health;
+        private double _Health=70;
         public double Health { get => _Health; set => _Health = value; }
-        private double _Speed=2.5;
+        private double _Speed=5;
         public double Speed { get => _Speed; set => _Speed = value; }
         private List<Image> _Sprites = new List<Image>();
         public List<Image> Sprites { get => _Sprites; } 
@@ -88,9 +88,9 @@ namespace TowerDefense
     {
         private string _Name;
         public string Name { get => _Name; set => _Name = value; }
-        private double _Health;
+        private double _Health=100;
         public double Health { get => _Health; set => _Health = value; }
-        private double _Speed=3;
+        private double _Speed=4;
         public double Speed { get => _Speed; set => _Speed = value; }
         private List<Image> _Sprites=new List<Image>();
         public List<Image> Sprites { get => _Sprites; } 

@@ -22,20 +22,37 @@ namespace TowerDefense
 
     public partial class AttackerControl : UserControl
     {
-        public IAttacker attacker;
-        public Point CurrentTarget;
+        Random random;
+        private IAttacker attacker;
+        private Point CurrentTarget;
         private List<Point> Path;
         private Image prev;
-        public AttackerControl(IAttacker a, Point start ,  List<Point> path)
+        GamePage page;
+        public void GetDamaged(TowerControl t)
+        {
+            if (attacker.Health - t.Damage <= 0)
+            { 
+                (this.Parent as Canvas).Children.Remove(this);
+                page.goldCount.Content = (Convert.ToDouble(page.goldCount.Content) + attacker.Health / 4).ToString();
+            }
+            else
+            { 
+                attacker.Health -= t.Damage;
+                CurrentHp.Value -= t.Damage;
+            }
+        }
+        public AttackerControl(IAttacker a, List<Point> path,Random r,GamePage p)
         {
             InitializeComponent();
-            Canvas.SetTop(this, start.Y);
-            Canvas.SetLeft(this, start.X);
+            Canvas.SetTop(this, path[0].Y);
+            Canvas.SetLeft(this, path[0].X);
             attacker = a;
             Path = path;
-            CurrentTarget = Path[0];
+            random = r;
+            CurrentTarget = Path[1];
             Init();
             ChangeImage();
+            page = p;
         }
         private void Init()
         {
@@ -45,33 +62,52 @@ namespace TowerDefense
         }
         private void Finish()
         {
-            (this.Parent as Canvas).Children.Remove(this);
+            if (attacker.Health > 0 && CurrentHp.Value > 0&&page.StartGameBtn.Content.ToString()!="Start")
+            {
+                if (page.lives > 1)
+                { 
+                    page.lives--;
+                    if(this.Parent is Canvas)
+                        (this.Parent as Canvas).Children.Remove(this);
+                }
+                else if(page.lives == 1)
+                {
+                    page.lives--;
+                }
+            }
+            else
+            {
+                if(this.Parent is Canvas)
+                    (this.Parent as Canvas).Children.Remove(this);
+            }
         }
 
         public async void Move()
         {
                 while (true)
                 {
-                    if (Canvas.GetTop(this) < CurrentTarget.Y && Canvas.GetLeft(this) == CurrentTarget.X)
-                        Canvas.SetTop(this, Canvas.GetTop(this) + 1);
-                    else if (Canvas.GetTop(this) > CurrentTarget.Y && Canvas.GetLeft(this) == CurrentTarget.X)
-                        Canvas.SetTop(this, Canvas.GetTop(this) - 1);
-                    else if (Canvas.GetTop(this) == CurrentTarget.Y && Canvas.GetLeft(this) > CurrentTarget.X)
-                        Canvas.SetLeft(this, Canvas.GetLeft(this) - 1);
-                    else if (Canvas.GetTop(this) == CurrentTarget.Y && Canvas.GetLeft(this) < CurrentTarget.X)
-                        Canvas.SetLeft(this, Canvas.GetLeft(this) + 1);
-                    else if (Canvas.GetTop(this) == CurrentTarget.Y && Canvas.GetLeft(this) == CurrentTarget.X)
+                if (Canvas.GetTop(this) < CurrentTarget.Y && Canvas.GetLeft(this) == CurrentTarget.X)
+                { Canvas.SetTop(this, Canvas.GetTop(this) + 1); }
+                else if (Canvas.GetTop(this) > CurrentTarget.Y && Canvas.GetLeft(this) == CurrentTarget.X)
+                { Canvas.SetTop(this, Canvas.GetTop(this) - 1); }
+                else if (Canvas.GetTop(this) == CurrentTarget.Y && Canvas.GetLeft(this) > CurrentTarget.X)
+                { Canvas.SetLeft(this, Canvas.GetLeft(this) - 1);  }
+                else if (Canvas.GetTop(this) == CurrentTarget.Y && Canvas.GetLeft(this) < CurrentTarget.X)
+                { Canvas.SetLeft(this, Canvas.GetLeft(this) + 1);  }
+                else if (Canvas.GetTop(this) == CurrentTarget.Y && Canvas.GetLeft(this) == CurrentTarget.X)
+                {
+                    if (Path.IndexOf(CurrentTarget) + 1 != Path.Count)
                     {
-                        if (Path.IndexOf(CurrentTarget) + 1 != Path.Count)
-                            CurrentTarget = Path[Path.IndexOf(CurrentTarget) + 1];
-                        else
-                        {
-                            Finish();
-                            return;
-                        }
+                        CurrentTarget = Path[Path.IndexOf(CurrentTarget) + 1];
                     }
+                    else
+                    {
+                        Finish();
+                        return;
+                    }
+                }
                     ChangeImage();
-                    await Task.Delay(TimeSpan.FromMilliseconds(attacker.Speed*new Random().Next(10,20)));
+                    await Task.Delay(TimeSpan.FromMilliseconds(attacker.Speed));
                 }
         }
 
@@ -79,7 +115,7 @@ namespace TowerDefense
         {
             if (Sprite.Source != null)
             {
-                    if (Canvas.GetTop(this) < CurrentTarget.Y && Canvas.GetLeft(this) == CurrentTarget.X)
+                    if (Canvas.GetTop(this) <= CurrentTarget.Y && Canvas.GetLeft(this) == CurrentTarget.X)
                     {
                         if (attacker.Sprites.IndexOf(prev) < 2)
                         {
@@ -92,7 +128,7 @@ namespace TowerDefense
                             Sprite.Source = (attacker).Sprites[0].Source;
                         }
                     }
-                    else if (Canvas.GetTop(this) > CurrentTarget.Y && Canvas.GetLeft(this) == CurrentTarget.X)
+                    else if (Canvas.GetTop(this) >= CurrentTarget.Y && Canvas.GetLeft(this) == CurrentTarget.X)
                     {
                         if ((attacker).Sprites.IndexOf(prev) < 5)
                         {
@@ -105,7 +141,7 @@ namespace TowerDefense
                             Sprite.Source = (attacker).Sprites[3].Source;
                         }
                     }
-                    else if (Canvas.GetTop(this) == CurrentTarget.Y && Canvas.GetLeft(this) < CurrentTarget.X)
+                    else if (Canvas.GetTop(this) == CurrentTarget.Y && Canvas.GetLeft(this) <= CurrentTarget.X)
                     {
                         if ((attacker).Sprites.IndexOf(prev) < 11)
                         {
@@ -118,7 +154,7 @@ namespace TowerDefense
                             Sprite.Source = (attacker).Sprites[9].Source;
                         }
                     }
-                    else if (Canvas.GetTop(this) == CurrentTarget.Y && Canvas.GetLeft(this) > CurrentTarget.X)
+                    else if (Canvas.GetTop(this) == CurrentTarget.Y && Canvas.GetLeft(this) >= CurrentTarget.X)
                     {
                         if ((attacker).Sprites.IndexOf(prev) < 8)
                         {
@@ -135,22 +171,22 @@ namespace TowerDefense
                 }
             else
             {
-                    if (Canvas.GetTop(this) < CurrentTarget.Y && Canvas.GetLeft(this) == CurrentTarget.X)
+                    if (Canvas.GetTop(this) <= CurrentTarget.Y && Canvas.GetLeft(this) == CurrentTarget.X)
                     {
                             prev = (attacker).Sprites[0];
                             Sprite.Source = (attacker).Sprites[0].Source;
                     }
-                    else if (Canvas.GetTop(this) > CurrentTarget.Y && Canvas.GetLeft(this) == CurrentTarget.X)
+                    else if (Canvas.GetTop(this) >= CurrentTarget.Y && Canvas.GetLeft(this) == CurrentTarget.X)
                     {
                         prev = (attacker).Sprites[3];
                             Sprite.Source = (attacker).Sprites[3].Source;
                     }
-                    else if (Canvas.GetTop(this) == CurrentTarget.Y && Canvas.GetLeft(this) < CurrentTarget.X)
+                    else if (Canvas.GetTop(this) == CurrentTarget.Y && Canvas.GetLeft(this) <=CurrentTarget.X)
                     {
                         prev = (attacker).Sprites[9];
                             Sprite.Source = (attacker).Sprites[9].Source;
                     }
-                    else if (Canvas.GetTop(this) == CurrentTarget.Y && Canvas.GetLeft(this) > CurrentTarget.X)
+                    else if (Canvas.GetTop(this) == CurrentTarget.Y && Canvas.GetLeft(this) >= CurrentTarget.X)
                     {
                             prev = (attacker).Sprites[6];
                             Sprite.Source = (attacker).Sprites[6].Source;

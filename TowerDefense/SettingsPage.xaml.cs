@@ -22,12 +22,14 @@ namespace TowerDefense
     public partial class SettingsPage : Page
     {
         Frame frame;
-        Settings settings = new Settings();
-        public SettingsPage(Frame f)
+        Settings settings;
+        public SettingsPage(Frame f,Settings s)
         {
             InitializeComponent();
             BackgroundImage.Source = new ImageSourceConverter().ConvertFromString("Textures/wood.jpg") as ImageSource;
             frame = f;
+            settings = s;
+            Volume.Value = settings.Volume*10;
         }
 
         private async void BackBtn_Click(object sender, RoutedEventArgs e)
@@ -37,6 +39,22 @@ namespace TowerDefense
             await Task.Delay(300);
             presssound.Stop();
             frame.GoBack();
+        }
+
+        private void DiffSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (DiffSliderLabel != null)
+            {
+                settings.Difficulty = (int)DiffSlider.Value;
+            }
+        }
+
+        private void DiffSlider_ValueChanged_1(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (VolumeSliderLabel != null)
+            {
+                settings.Volume = Volume.Value/10;
+            }
         }
     }
 }
